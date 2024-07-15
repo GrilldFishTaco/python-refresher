@@ -206,20 +206,27 @@ def simulate_auv2_motion(
     y = [y0]
     theta = [theta0]
     v = [0]
+    x_v = [0]
+    y_v = [0]
     omega = [0]
     a = [0]
     x_accel = 0
     y_accel = 0
+    a_accel = 0
 
     for i in range(1, t_final, dt):
         t.append(i)
         x_accel, y_accel = calculate_auv2_acceleration(T, alpha, theta, mass)
         a.append(math.sqrt(x_accel**2 + y_accel**2))
-        v.append(a[i])
-        x.append(x[i-1] + )
-        y.append(x[i-1] + )
-        
-        calculate_auv2_angular_acceleration(T, alpha, L, l, inertia)
+        v.append(a[i] + v[i - 1])
+        x_v.append(x_v[i - 1] + x_accel)
+        y_v.append(y_v[i - 1] + y_accel)
+        x.append(x[i - 1] + (x_v[i - 1] + x_v[i]) / 2)
+        y.append(y[i - 1] + (y_v[i - 1] + y_v[i]) / 2)
+
+        a_accel = calculate_auv2_angular_acceleration(T, alpha, L, l, inertia)
+        omega.append(omega[i - 1] + a_accel)
+        theta.append(theta[i - 1] + (omega[i - 1] + omega[i]) / 2)
 
     return (
         np.ndarray(t),
