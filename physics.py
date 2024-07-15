@@ -4,6 +4,7 @@ import math
 
 # Problem 1
 def calculate_buoyancy(v, density_fluid):
+    """ """
     g = 9.81
     bouyancy = density_fluid * v * g
 
@@ -12,6 +13,7 @@ def calculate_buoyancy(v, density_fluid):
 
 # Problem 2
 def will_it_float(v, mass):
+    """ """
     g = 9.81
     if calculate_buoyancy(v, mass / v) > mass * g:
         return True
@@ -23,6 +25,7 @@ def will_it_float(v, mass):
 
 # Problem 3
 def calculate_pressure(depth):
+    """ """
     g = 9.81
     pressure = depth * g
 
@@ -31,6 +34,7 @@ def calculate_pressure(depth):
 
 # Problem 4
 def calculate_acceleration(F, m):
+    """ """
     acceleration = F / m
 
     return acceleration
@@ -38,6 +42,7 @@ def calculate_acceleration(F, m):
 
 # Problem 5
 def calculate_angular_acceleration(tau, I):
+    """ """
     acceleration = tau / I
 
     return acceleration
@@ -45,6 +50,7 @@ def calculate_angular_acceleration(tau, I):
 
 # Problem 6
 def calculate_torque(F_magnitude, F_direction, r):
+    """ """
     torque = F_magnitude * r
     if F_direction < 0:
         torque *= -1
@@ -54,6 +60,7 @@ def calculate_torque(F_magnitude, F_direction, r):
 
 # Problem 7
 def calculate_moment_of_inertia(m, r):
+    """ """
     moi = m * r**2
 
     return moi
@@ -63,6 +70,7 @@ def calculate_moment_of_inertia(m, r):
 def calculate_auv_acceleration(
     F_magnitude, F_angle, mass=100, volume=0.1, thruster_distance=0.5
 ):
+    """ """
     acceleration = calculate_acceleration(F_magnitude, mass)
 
     return acceleration
@@ -71,6 +79,7 @@ def calculate_auv_acceleration(
 def calculate_auv_angular_acceleration(
     F_magnitude, F_angle, inertia=1, thruster_distance=0.5
 ):
+    """ """
     a_acceleration = calculate_angular_acceleration(F_magnitude, inertia)
 
     return a_acceleration
@@ -78,6 +87,7 @@ def calculate_auv_angular_acceleration(
 
 # Problem 9
 def calculate_auv2_acceleration(T, alpha, theta, mass=100):
+    """ """
     sin = math.sin(alpha)
     x_force1 = T[1] * sin - T[0] * sin
     x_force2 = T[3] * sin - T[2] * sin
@@ -89,13 +99,15 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
     y_net = y_force1 + y_force2
 
     force = math.sqrt(x_net**2 + y_net**2)
+    F_angle = math.atan(x_net / y_net)
 
     acceleration = calculate_acceleration(force, mass)
 
-    return acceleration
+    return acceleration, F_angle
 
 
 def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
+    """ """
     sin = math.sin(alpha)
     x_force1 = T[1] * sin - T[0] * sin
     x_force2 = T[3] * sin - T[2] * sin
@@ -106,19 +118,43 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     y_force2 = T[1] * cos - T[2] * cos
     y_angular = (y_force1 - y_force2) * L
 
-    force = math.sqrt(x_net**2 + y_net**2)
+    force = y_angular + x_angular
+    torque = force * L
 
-    acceleration = calculate_acceleration(force, mass)
+    acceleration = calculate_angular_acceleration(torque, inertia)
 
     return acceleration
 
 
 # Problem 10
-def simulatr_auv2_motion(T, alpha, L, l, mass, inertia, dt, t_final, x0, y0, theta0):
+def simulate_auv2_motion(
+    T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=10, x0=0, y0=0, theta0=0
+):
+    """ """
+    t = [0]
+    x = [x0]
+    y = [y0]
+    theta = [theta0]
+    v = [0]
+    omega = [0]
+    a = [0]
 
-    return None
+    for i in range(1, t_final, dt):
+        t.append(i)
+        calculate_auv2_acceleration(T, alpha, theta, mass)
+        calculate_auv2_angular_acceleration(T, alpha, L, l, inertia)
+
+    return (
+        np.ndarray(t),
+        np.ndarray(x),
+        np.ndarray(y),
+        np.ndarray(theta),
+        np.ndarray(v),
+        np.ndarray(omega),
+        np.ndarray(a),
+    )
 
 
 def plot_auv2_motion(t, x, y, theta, v, omega, a):
-
+    """ """
     return None
