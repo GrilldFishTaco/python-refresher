@@ -6,7 +6,7 @@ import math
 def calculate_buoyancy(v, density_fluid):
     """ """
     g = 9.81
-    bouyancy = density_fluid * v * g
+    buoyancy = density_fluid * v * g
 
     return buoyancy
 
