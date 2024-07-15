@@ -3,8 +3,10 @@ import math
 
 
 # Problem 1
-def calculate_buoyancy(v, density_fluid):
-    """ """
+def calculate_buoyancy(v: float, density_fluid: float):
+    """Return: Force of buoyancy
+    v: Volume displaced by AUV
+    density_fluid: Density of fluid AUV is submerged in"""
     g = 9.81
     buoyancy = density_fluid * v * g
 
@@ -12,8 +14,10 @@ def calculate_buoyancy(v, density_fluid):
 
 
 # Problem 2
-def will_it_float(v, mass):
-    """ """
+def will_it_float(v: float, mass: float):
+    """Return: True if floats, False if sinks, None if nuetral
+    v: Volume displaced by AUV
+    mass: Mass of AUV"""
     g = 9.81
     if calculate_buoyancy(v, mass / v) > mass * g:
         return True
@@ -24,33 +28,42 @@ def will_it_float(v, mass):
 
 
 # Problem 3
-def calculate_pressure(depth):
-    """ """
+def calculate_pressure(depth: float):
+    """Return: Pressure Force at a depth
+    depth: Depth of AUV"""
     g = 9.81
-    pressure = depth * g
+    pressure = depth * g + 1
+    # Add full pressure equation for air
 
     return pressure
 
 
 # Problem 4
-def calculate_acceleration(F, m):
-    """ """
+def calculate_acceleration(F: float, m: float):
+    """Return: Acceleration of AUV
+    F: Force exerted on AUV
+    m: Mass of AUV"""
     acceleration = F / m
 
     return acceleration
 
 
 # Problem 5
-def calculate_angular_acceleration(tau, I):
-    """ """
+def calculate_angular_acceleration(tau: float, I: float):
+    """Return: Angular acceleration of AUV
+    tau: Torque exerted on AUV
+    I: Moment of inertia"""
     acceleration = tau / I
 
     return acceleration
 
 
 # Problem 6
-def calculate_torque(F_magnitude, F_direction, r):
-    """ """
+def calculate_torque(F_magnitude: float, F_direction: float, r: float):
+    """Return: torque exerted on AUV
+    F_magnitude: Magnitude of force exerted on AUV
+    F_direction: Direction of Force exerted on AUV
+    r: Distance from axis of rotation to point of force"""
     torque = F_magnitude * r
     if F_direction < 0:
         torque *= -1
@@ -59,8 +72,10 @@ def calculate_torque(F_magnitude, F_direction, r):
 
 
 # Problem 7
-def calculate_moment_of_inertia(m, r):
-    """ """
+def calculate_moment_of_inertia(m: float, r: float):
+    """Return: Momment of inertia of AUV
+    m: Mass of AUV
+    r: Distance from AUV axis of rotation to force applied"""
     moi = m * r**2
 
     return moi
@@ -68,26 +83,39 @@ def calculate_moment_of_inertia(m, r):
 
 # Problem 8
 def calculate_auv_acceleration(
-    F_magnitude, F_angle, mass=100, volume=0.1, thruster_distance=0.5
+    F_magnitude: float, F_angle: float, mass=100, volume=0.1, thruster_distance=0.5
 ):
-    """ """
+    """Return: Magnitude of acceleration of AUV
+    F_magnitude: Magnitude of force exerted on AUV
+    F_angle: Angle of Force applied
+    mass: Mass of AUV
+    volume: Volume of AUV
+    thruster_distance: Distance of thruster to axis of rotation"""
     acceleration = calculate_acceleration(F_magnitude, mass)
 
     return acceleration
 
 
 def calculate_auv_angular_acceleration(
-    F_magnitude, F_angle, inertia=1, thruster_distance=0.5
+    F_magnitude: float, F_angle: float, inertia=1, thruster_distance=0.5
 ):
-    """ """
+    """Return: Magnitude of angular acceleration of AUV
+    F_magnitude: Magnitude of force exerted on AUV
+    F_angle: Angle of Force applied
+    inertia: Moment of inertia of AUV
+    thruster_distance: Distance of thruster to axis of rotation"""
     a_acceleration = calculate_angular_acceleration(F_magnitude, inertia)
 
     return a_acceleration
 
 
 # Problem 9
-def calculate_auv2_acceleration(T, alpha, theta, mass=100):
-    """ """
+def calculate_auv2_acceleration(T: np.ndarray, alpha: float, theta: float, mass=100):
+    """Return: Magnitude of angular acceleration of AUV
+    F_magnitude: Magnitude of force exerted on AUV
+    F_angle: Angle of Force applied
+    inertia: Moment of inertia of AUV
+    thruster_distance: Distance of thruster to axis of rotation"""
     sin = math.sin(alpha)
     x_force1 = T[1] * sin - T[0] * sin
     x_force2 = T[3] * sin - T[2] * sin
@@ -106,7 +134,9 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
     return acceleration, F_angle
 
 
-def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
+def calculate_auv2_angular_acceleration(
+    T: np.ndarray, alpha: float, L: float, l: float, inertia=100
+):
     """ """
     sin = math.sin(alpha)
     x_force1 = T[1] * sin - T[0] * sin
@@ -128,7 +158,17 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
 
 # Problem 10
 def simulate_auv2_motion(
-    T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=10, x0=0, y0=0, theta0=0
+    T: np.ndarray,
+    alpha: float,
+    L: float,
+    l: float,
+    mass=100,
+    inertia=100,
+    dt=0.1,
+    t_final=10,
+    x0=0,
+    y0=0,
+    theta0=0,
 ):
     """ """
     t = [0]
@@ -155,6 +195,14 @@ def simulate_auv2_motion(
     )
 
 
-def plot_auv2_motion(t, x, y, theta, v, omega, a):
+def plot_auv2_motion(
+    t: np.ndarray,
+    x: np.ndarray,
+    y: np.ndarray,
+    theta: np.ndarray,
+    v: np.ndarray,
+    omega: np.ndarray,
+    a: np.ndarray,
+):
     """ """
     return None
